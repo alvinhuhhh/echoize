@@ -7,7 +7,7 @@ export const metadata: Metadata = {
   title: "Login",
 };
 
-export default function LoginPage() {
+export default async function LoginPage() {
   return (
     <main className="flex flex-col justify-center items-center h-screen">
       <H2 className="mb-2">Welcome to Echoize!</H2>
