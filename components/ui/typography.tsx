@@ -19,6 +19,7 @@ const H1 = React.forwardRef<HTMLHeadingElement, TypographyProps>(
     );
   }
 );
+H1.displayName = "H1";
 
 const H2 = React.forwardRef<HTMLHeadingElement, TypographyProps>(
   ({ className, ...props }, ref) => {
@@ -34,6 +35,7 @@ const H2 = React.forwardRef<HTMLHeadingElement, TypographyProps>(
     );
   }
 );
+H2.displayName = "H2";
 
 const H3 = React.forwardRef<HTMLHeadingElement, TypographyProps>(
   ({ className, ...props }, ref) => {
@@ -49,6 +51,7 @@ const H3 = React.forwardRef<HTMLHeadingElement, TypographyProps>(
     );
   }
 );
+H3.displayName = "H3";
 
 const H4 = React.forwardRef<HTMLHeadingElement, TypographyProps>(
   ({ className, ...props }, ref) => {
@@ -64,6 +67,7 @@ const H4 = React.forwardRef<HTMLHeadingElement, TypographyProps>(
     );
   }
 );
+H4.displayName = "H4";
 
 const P = React.forwardRef<HTMLParagraphElement, TypographyProps>(
   ({ className, ...props }, ref) => {
@@ -77,6 +81,7 @@ const P = React.forwardRef<HTMLParagraphElement, TypographyProps>(
     );
   }
 );
+P.displayName = "P";
 
 const Large = React.forwardRef<HTMLParagraphElement, TypographyProps>(
   ({ className, ...props }, ref) => {
@@ -87,6 +92,7 @@ const Large = React.forwardRef<HTMLParagraphElement, TypographyProps>(
     );
   }
 );
+Large.displayName = "Large";
 
 const Small = React.forwardRef<HTMLParagraphElement, TypographyProps>(
   ({ className, ...props }, ref) => {
@@ -100,6 +106,7 @@ const Small = React.forwardRef<HTMLParagraphElement, TypographyProps>(
     );
   }
 );
+Small.displayName = "Small";
 
 const Muted = React.forwardRef<HTMLParagraphElement, TypographyProps>(
   ({ className, ...props }, ref) => {
@@ -110,5 +117,6 @@ const Muted = React.forwardRef<HTMLParagraphElement, TypographyProps>(
     );
   }
 );
+Muted.displayName = "Muted";
 
 export { H1, H2, H3, H4, P, Large, Small, Muted };
