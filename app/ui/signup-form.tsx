@@ -75,9 +75,11 @@ export default function SignupForm() {
           </div>
         </CardContent>
         <CardFooter className="flex justify-between">
-          <Button variant="outline" onClick={(e) => e.preventDefault()}>
-            <Link href="/login">Cancel</Link>
-          </Button>
+          <Link href="/login">
+            <Button variant="outline" onClick={(e) => e.preventDefault()}>
+              Cancel
+            </Button>
+          </Link>
           <Button>Sign up</Button>
         </CardFooter>
       </Card>
