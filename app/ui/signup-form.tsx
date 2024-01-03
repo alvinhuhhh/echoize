@@ -10,15 +10,16 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { ValidationError } from "@/components/ui/typography";
+import { SignupState, signup } from "@/lib/actions";
 import Link from "next/link";
-import { useSearchParams } from "next/navigation";
+import { useFormState } from "react-dom";
 
 export default function SignupForm() {
-  const searchParams = useSearchParams();
-  const error = searchParams.get("error") ?? "";
+  const initialState: SignupState = { message: null, errors: {} };
+  const [state, dispatch] = useFormState(signup, initialState);
 
   return (
-    <form action="/auth/signup" method="post">
+    <form action={dispatch}>
       <Card className="w-[350px]">
         <CardHeader />
         <CardContent>
@@ -31,6 +32,12 @@ export default function SignupForm() {
                 placeholder="Enter your email"
                 type="email"
               />
+              <div id="email-error" className="ml-1">
+                {state.errors?.email &&
+                  state.errors.email.map((error: string, index: number) => (
+                    <ValidationError key={index}>{error}</ValidationError>
+                  ))}
+              </div>
             </div>
             <div className="flex flex-col space-y-1.5">
               <Label htmlFor="password">Password</Label>
@@ -40,6 +47,12 @@ export default function SignupForm() {
                 placeholder="Enter your password"
                 type="password"
               />
+              <div id="password-error" className="ml-1">
+                {state.errors?.password &&
+                  state.errors.password.map((error: string, index: number) => (
+                    <ValidationError key={index}>{error}</ValidationError>
+                  ))}
+              </div>
             </div>
             <div className="flex flex-col space-y-1.5">
               <Label htmlFor="displayName">
@@ -50,12 +63,15 @@ export default function SignupForm() {
                 name="displayName"
                 placeholder="Enter your preferred name"
               />
-            </div>
-            {error && (
-              <div className="flex justify-center space-y-1.5">
-                <ValidationError>Invalid credentials</ValidationError>
+              <div id="displayName-error" className="ml-1">
+                {state.errors?.displayName &&
+                  state.errors.displayName.map(
+                    (error: string, index: number) => (
+                      <ValidationError key={index}>{error}</ValidationError>
+                    )
+                  )}
               </div>
-            )}
+            </div>
           </div>
         </CardContent>
         <CardFooter className="flex justify-between">
