@@ -69,6 +69,22 @@ const H4 = React.forwardRef<HTMLHeadingElement, TypographyProps>(
 );
 H4.displayName = "H4";
 
+const Title = React.forwardRef<HTMLHeadingElement, TypographyProps>(
+  ({ className, ...props }, ref) => {
+    return (
+      <h4
+        ref={ref}
+        className={cn(
+          `${className} scroll-m-20 text-8xl font-extrabold tracking-tight lg:text-9xl`
+        )}
+      >
+        {props.children}
+      </h4>
+    );
+  }
+);
+Title.displayName = "Title";
+
 const P = React.forwardRef<HTMLParagraphElement, TypographyProps>(
   ({ className, ...props }, ref) => {
     return (
@@ -119,4 +135,4 @@ const Muted = React.forwardRef<HTMLParagraphElement, TypographyProps>(
 );
 Muted.displayName = "Muted";
 
-export { H1, H2, H3, H4, P, Large, Small, Muted };
+export { H1, H2, H3, H4, Title, P, Large, Small, Muted };

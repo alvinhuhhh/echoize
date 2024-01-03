@@ -1,11 +1,17 @@
 import { Button } from "@/components/ui/button";
+import { P, Title } from "@/components/ui/typography";
 import Link from "next/link";
 
 export default function Home() {
   return (
-    <main className="flex justify-center items-center h-screen">
+    <main className="flex flex-col justify-center items-center h-screen gap-12">
+      <div className="flex flex-col justify-center items-center">
+        <Title className="lg">Echoize</Title>
+        <P>Product feedback made simple.</P>
+      </div>
+
       <Button>
-        <Link href="/login">Login</Link>
+        <Link href="/login">Let&#39;s go</Link>
       </Button>
     </main>
   );
