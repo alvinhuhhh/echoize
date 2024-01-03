@@ -9,9 +9,14 @@ import {
 } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { ValidationError } from "@/components/ui/typography";
 import Link from "next/link";
+import { useSearchParams } from "next/navigation";
 
 export default function SignupForm() {
+  const searchParams = useSearchParams();
+  const error = searchParams.get("error") ?? "";
+
   return (
     <form action="/auth/signup" method="post">
       <Card className="w-[350px]">
@@ -46,10 +51,15 @@ export default function SignupForm() {
                 placeholder="Enter your preferred name"
               />
             </div>
+            {error && (
+              <div className="flex justify-center space-y-1.5">
+                <ValidationError>Invalid credentials</ValidationError>
+              </div>
+            )}
           </div>
         </CardContent>
         <CardFooter className="flex justify-between">
-          <Button variant="outline">
+          <Button variant="outline" onClick={(e) => e.preventDefault()}>
             <Link href="/login">Cancel</Link>
           </Button>
           <Button>Sign up</Button>
