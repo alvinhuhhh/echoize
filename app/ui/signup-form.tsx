@@ -13,7 +13,7 @@ import Link from "next/link";
 
 export default function SignupForm() {
   return (
-    <form>
+    <form action="/auth/signup" method="post">
       <Card className="w-[350px]">
         <CardHeader />
         <CardContent>
