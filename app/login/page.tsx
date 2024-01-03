@@ -30,7 +30,7 @@ export default async function LoginPage() {
       <H2 className="mb-2">Welcome to Echoize</H2>
       <Muted className="mb-8">
         Don&#39;t have an account?{" "}
-        <Link className="text-blue-400 font-semibold" href="/">
+        <Link className="text-blue-400 font-semibold" href="/signup">
           Create one!
         </Link>
       </Muted>
