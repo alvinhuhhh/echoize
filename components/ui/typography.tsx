@@ -135,4 +135,15 @@ const Muted = React.forwardRef<HTMLParagraphElement, TypographyProps>(
 );
 Muted.displayName = "Muted";
 
-export { H1, H2, H3, H4, Title, P, Large, Small, Muted };
+const ValidationError = React.forwardRef<HTMLParagraphElement, TypographyProps>(
+  ({ className, ...props }, ref) => {
+    return (
+      <p ref={ref} className={cn(`${className} text-sm text-red-500`)}>
+        {props.children}
+      </p>
+    );
+  }
+);
+ValidationError.displayName = "ValidationError";
+
+export { H1, H2, H3, H4, Title, P, Large, Small, Muted, ValidationError };
