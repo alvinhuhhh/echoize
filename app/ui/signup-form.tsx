@@ -72,6 +72,11 @@ export default function SignupForm() {
                   )}
               </div>
             </div>
+            <div id="general-error">
+              {state.message && (
+                <ValidationError>{state.message}</ValidationError>
+              )}
+            </div>
           </div>
         </CardContent>
         <CardFooter className="flex justify-between">

@@ -1,7 +1,7 @@
 "use server";
 
 import { z } from "zod";
-import { cookies } from "next/headers";
+import { headers, cookies } from "next/headers";
 import { createServerActionClient } from "@supabase/auth-helpers-nextjs";
 import { redirect } from "next/navigation";
 
@@ -23,6 +23,7 @@ const SignupFormSchema = z.object({
 });
 
 export async function signup(prevState: SignupState, formData: FormData) {
+  const headersList = headers();
   const cookieStore = cookies();
   const supabase = createServerActionClient<Database>({
     cookies: () => cookieStore,
@@ -33,10 +34,11 @@ export async function signup(prevState: SignupState, formData: FormData) {
     displayName: formData.get("displayName"),
   });
 
+  // If validation fails, return early with errors
   if (!validatedFields.success) {
     return {
       errors: validatedFields.error.flatten().fieldErrors,
-      message: "Missing fields. Failed to sign up!",
+      message: "Missing fields. Please fill in all required fields.",
     };
   }
 
@@ -45,18 +47,27 @@ export async function signup(prevState: SignupState, formData: FormData) {
   const { data, error } = await supabase.auth.signUp({
     email,
     password,
+    options: {
+      emailRedirectTo: `${headersList.get("host")}/auth/callback`,
+    },
   });
 
-  if (data.user) {
-    const response = await supabase
-      .from("user_infos")
-      .insert({
-        user_id: data.user.id,
-        created_at: new Date().toUTCString(),
-        display_name: displayName,
-      })
-      .select();
+  // If Supabase Auth signup fails, return with error message
+  if (error) {
+    return {
+      errors: {},
+      message: error.message,
+    };
   }
 
-  redirect("/login");
+  // Insert additional info into user_infos table
+  if (data.user) {
+    await supabase.from("user_infos").insert({
+      user_id: data.user.id,
+      created_at: new Date().toUTCString(),
+      display_name: displayName,
+    });
+  }
+
+  redirect("/dashboard");
 }
