@@ -12,19 +12,19 @@ export interface Database {
       boards: {
         Row: {
           created_at: string
-          id: number
+          id: string
           name: string
           user_id: string
         }
         Insert: {
           created_at?: string
-          id?: number
+          id?: string
           name: string
           user_id: string
         }
         Update: {
           created_at?: string
-          id?: number
+          id?: string
           name?: string
           user_id?: string
         }
@@ -40,28 +40,28 @@ export interface Database {
       }
       posts: {
         Row: {
-          board_id: number
+          board_id: string
           created_at: string
           description: string | null
-          id: number
+          id: string
           status: string
           title: string
           upvotes: number
         }
         Insert: {
-          board_id: number
+          board_id: string
           created_at?: string
           description?: string | null
-          id?: number
+          id?: string
           status: string
           title: string
           upvotes?: number
         }
         Update: {
-          board_id?: number
+          board_id?: string
           created_at?: string
           description?: string | null
-          id?: number
+          id?: string
           status?: string
           title?: string
           upvotes?: number

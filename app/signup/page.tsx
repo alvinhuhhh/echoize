@@ -1,5 +1,5 @@
 import { Metadata } from "next";
-import SignupForm from "@/app/ui/signup-form";
+import SignupForm from "@/app/ui/auth/signup-form";
 import { H2, Muted } from "@/components/ui/typography";
 
 export const metadata: Metadata = {

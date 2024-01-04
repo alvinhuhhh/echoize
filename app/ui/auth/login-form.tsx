@@ -10,14 +10,15 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { ValidationError } from "@/components/ui/typography";
-import { useSearchParams } from "next/navigation";
+import { SigninState, signin } from "@/lib/actions";
+import { useFormState } from "react-dom";
 
 export default function LoginForm() {
-  const searchParams = useSearchParams();
-  const error = searchParams.get("error") ?? "";
+  const initialState: SigninState = { message: null, errors: {} };
+  const [state, dispatch] = useFormState(signin, initialState);
 
   return (
-    <form action="/auth/login" method="post">
+    <form action={dispatch}>
       <Card className="w-[350px]">
         <CardHeader />
         <CardContent>
@@ -40,11 +41,11 @@ export default function LoginForm() {
                 type="password"
               />
             </div>
-            {error && (
-              <div className="flex justify-center space-y-1.5">
-                <ValidationError>Invalid credentials</ValidationError>
-              </div>
-            )}
+            <div id="general-error">
+              {state.message && (
+                <ValidationError>{state.message}</ValidationError>
+              )}
+            </div>
           </div>
         </CardContent>
         <CardFooter className="flex justify-end">

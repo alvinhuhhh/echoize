@@ -1,14 +1,14 @@
 export type UserInfo = {
   id: string;
-  userId: string;
-  createdAt: string;
-  displayName: string;
+  user_id: string;
+  created_at: string;
+  display_name: string | null;
 };
 
 export type Board = {
   id: string;
-  userId: string;
-  createdAt: string;
+  user_id: string;
+  created_at: string;
   name: string;
 };
 
@@ -20,8 +20,8 @@ export enum Status {
 
 export type Post = {
   id: string;
-  boardId: string;
-  createdAt: string;
+  board_id: string;
+  created_at: string;
   title: string;
   description: string;
   upvotes: number;
