@@ -40,38 +40,38 @@ export interface Database {
       }
       posts: {
         Row: {
+          board_id: string
           created_at: string
           description: string | null
           id: string
           status: string
           title: string
           upvotes: number
-          user_id: string
         }
         Insert: {
+          board_id: string
           created_at?: string
           description?: string | null
           id?: string
           status: string
           title: string
           upvotes?: number
-          user_id: string
         }
         Update: {
+          board_id?: string
           created_at?: string
           description?: string | null
           id?: string
           status?: string
           title?: string
           upvotes?: number
-          user_id?: string
         }
         Relationships: [
           {
-            foreignKeyName: "posts_user_id_fkey"
-            columns: ["user_id"]
+            foreignKeyName: "posts_board_id_fkey"
+            columns: ["board_id"]
             isOneToOne: false
-            referencedRelation: "users"
+            referencedRelation: "boards"
             referencedColumns: ["id"]
           }
         ]

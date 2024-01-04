@@ -227,3 +227,102 @@ export async function getBoards() {
 
   return data as Board[];
 }
+
+export async function updateBoard(board: Board) {
+  const cookieStore = cookies();
+  const supabase = createServerActionClient<Database>({
+    cookies: () => cookieStore,
+  });
+
+  const {
+    data: { session },
+  } = await supabase.auth.getSession();
+
+  if (!session) {
+    return null;
+  }
+
+  const { data, error } = await supabase
+    .from("boards")
+    .update(board)
+    .eq("id", board.id)
+    .select();
+
+  if (error) {
+    return null;
+  }
+
+  return data as Board[];
+}
+
+export async function deleteBoard(id: string) {
+  const cookieStore = cookies();
+  const supabase = createServerActionClient<Database>({
+    cookies: () => cookieStore,
+  });
+
+  const {
+    data: { session },
+  } = await supabase.auth.getSession();
+
+  if (!session) {
+    return false;
+  }
+
+  const { data, error } = await supabase.from("boards").delete().eq("id", id);
+
+  if (error) {
+    return false;
+  }
+
+  return true;
+}
+
+export async function getPostCount(board: Board) {
+  const cookieStore = cookies();
+  const supabase = createServerActionClient<Database>({
+    cookies: () => cookieStore,
+  });
+
+  const {
+    data: { session },
+  } = await supabase.auth.getSession();
+
+  if (!session) {
+    return null;
+  }
+
+  const count = (await supabase.from("posts").select().eq("board_id", board.id))
+    .count;
+
+  return count;
+}
+
+export async function getPosts() {}
+
+export async function createPost() {}
+
+export async function updatePost() {}
+
+export async function deletePost(id: string) {
+  const cookieStore = cookies();
+  const supabase = createServerActionClient<Database>({
+    cookies: () => cookieStore,
+  });
+
+  const {
+    data: { session },
+  } = await supabase.auth.getSession();
+
+  if (!session) {
+    return false;
+  }
+
+  const { data, error } = await supabase.from("posts").delete().eq("id", id);
+
+  if (error) {
+    return false;
+  }
+
+  return true;
+}

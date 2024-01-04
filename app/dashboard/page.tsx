@@ -13,6 +13,7 @@ export const metadata: Metadata = {
 
 export default async function DashboardPage() {
   const boards = await getBoards();
+  const postCount = 100;
 
   return (
     <main className="max-w-[960px] w-screen">
@@ -31,7 +32,7 @@ export default async function DashboardPage() {
       <div className="flex flex-col mt-6 space-y-4">
         {boards?.length ? (
           boards.map((board: Board, index: number) => (
-            <BoardComponent key={index} board={board} />
+            <BoardComponent key={index} board={board} postCount={postCount} />
           ))
         ) : (
           <Muted>No boards found. Create one?</Muted>
