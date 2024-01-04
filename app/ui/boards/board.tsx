@@ -112,8 +112,8 @@ export default function BoardComponent({
                     This action cannot be undone.
                   </AlertDialogTitle>
                   <AlertDialogDescription>
-                    All posts and data related to this Board will be deleted.
-                    Confirm to delete all data related to this Board.
+                    Select &#39;Confirm&#39; to delete ALL posts and data
+                    related to this Board.
                   </AlertDialogDescription>
                 </AlertDialogHeader>
                 <AlertDialogFooter>
