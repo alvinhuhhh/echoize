@@ -8,7 +8,7 @@ import { redirect } from "next/navigation";
 import type { Database } from "@/lib/supabase";
 
 import Link from "next/link";
-import LoginForm from "../ui/login-form";
+import LoginForm from "@/app/ui/auth/login-form";
 
 export const metadata: Metadata = {
   title: "Login",

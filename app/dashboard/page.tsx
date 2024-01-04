@@ -1,6 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { H2, Muted } from "@/components/ui/typography";
-import BoardComponent from "@/app/ui/board";
+import BoardComponent from "@/app/ui/boards/board";
 import { Plus } from "lucide-react";
 import { Metadata } from "next";
 import Link from "next/link";

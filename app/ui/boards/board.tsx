@@ -22,6 +22,7 @@ import {
 import { H3, Muted, Small } from "@/components/ui/typography";
 import { Board } from "@/lib/definitions";
 import { Check, FileCog, Link, MoreHorizontal, Trash } from "lucide-react";
+import { useRouter } from "next/navigation";
 import { useState } from "react";
 
 export default function BoardComponent({
@@ -32,6 +33,7 @@ export default function BoardComponent({
   postCount: number;
 }) {
   const [linkCopied, setLinkCopied] = useState(false);
+  const router = useRouter();
 
   function copyLink() {
     navigator.clipboard.writeText(
@@ -43,6 +45,10 @@ export default function BoardComponent({
       setLinkCopied(false);
       clearTimeout(timer);
     }, 5000);
+  }
+
+  function editBoard() {
+    router.push(`/dashboard/edit/${board.id}`);
   }
 
   return (
@@ -79,7 +85,7 @@ export default function BoardComponent({
                 </Button>
               </DropdownMenuTrigger>
               <DropdownMenuContent>
-                <DropdownMenuItem>
+                <DropdownMenuItem onClick={editBoard}>
                   <FileCog className="mr-2 h-4 w-4" />
                   <span>Edit</span>
                 </DropdownMenuItem>

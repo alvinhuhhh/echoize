@@ -228,7 +228,7 @@ export async function getBoards() {
   return data as Board[];
 }
 
-export async function updateBoard(board: Board) {
+export async function getBoardById(id: string) {
   const cookieStore = cookies();
   const supabase = createServerActionClient<Database>({
     cookies: () => cookieStore,
@@ -244,15 +244,65 @@ export async function updateBoard(board: Board) {
 
   const { data, error } = await supabase
     .from("boards")
-    .update(board)
-    .eq("id", board.id)
-    .select();
+    .select()
+    .eq("id", id)
+    .single();
 
   if (error) {
     return null;
   }
 
-  return data as Board[];
+  return data as Board;
+}
+
+export async function updateBoard(
+  id: string,
+  prevState: BoardState,
+  formData: FormData
+) {
+  const cookieStore = cookies();
+  const supabase = createServerActionClient<Database>({
+    cookies: () => cookieStore,
+  });
+
+  const validatedFields = BoardFormSchema.safeParse({
+    name: formData.get("name"),
+  });
+
+  // If validation fails, return early with errors
+  if (!validatedFields.success) {
+    return {
+      errors: validatedFields.error.flatten().fieldErrors,
+      message: "Please fill in all required fields.",
+    };
+  }
+
+  const { name } = validatedFields.data;
+
+  const {
+    data: { session },
+  } = await supabase.auth.getSession();
+
+  if (!session) {
+    return {
+      errors: {},
+      message: "User is not logged in.",
+    };
+  }
+
+  const { error } = await supabase
+    .from("boards")
+    .update({ name: name })
+    .eq("id", id);
+
+  if (error) {
+    return {
+      errors: {},
+      message: error.message,
+    };
+  }
+
+  redirect("/dashboard");
 }
 
 export async function deleteBoard(id: string) {

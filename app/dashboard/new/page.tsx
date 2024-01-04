@@ -1,4 +1,4 @@
-import NewBoardForm from "@/app/ui/newboard-form";
+import NewBoardForm from "@/app/ui/boards/new-form";
 import { H2 } from "@/components/ui/typography";
 import { Metadata } from "next";
 
