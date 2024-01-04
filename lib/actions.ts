@@ -74,3 +74,22 @@ export async function signup(prevState: SignupState, formData: FormData) {
 
   redirect("/dashboard");
 }
+
+export async function getUserInfo(user_id: string) {
+  const cookieStore = cookies();
+  const supabase = createServerActionClient<Database>({
+    cookies: () => cookieStore,
+  });
+
+  const { data, error } = await supabase
+    .from("user_infos")
+    .select()
+    .eq("user_id", user_id)
+    .single();
+
+  if (error) {
+    return null;
+  }
+
+  return data;
+}

@@ -17,17 +17,21 @@ import {
   navigationMenuTriggerStyle,
 } from "@/components/ui/navigation-menu";
 import { ThemeToggle } from "@/components/ui/theme-toggle";
-import { H3 } from "@/components/ui/typography";
-import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
+import { H3, Large, Muted } from "@/components/ui/typography";
+import { UserInfo } from "@/lib/definitions";
+import {
+  User,
+  createClientComponentClient,
+} from "@supabase/auth-helpers-nextjs";
 import { CircleUserRound, LogOut } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 
-export default function Navbar() {
+export default function Navbar({ user }: { user?: User & UserInfo }) {
   const router = useRouter();
+  const supabase = createClientComponentClient();
 
   async function logout() {
-    const supabase = createClientComponentClient();
     await supabase.auth.signOut();
     router.refresh();
   }
@@ -65,8 +69,11 @@ export default function Navbar() {
               <CircleUserRound />
             </Button>
           </DropdownMenuTrigger>
-          <DropdownMenuContent>
-            <DropdownMenuLabel>My Account</DropdownMenuLabel>
+          <DropdownMenuContent className="w-72">
+            <DropdownMenuLabel>
+              <Large>{user?.display_name || "unknown"}</Large>
+              <Muted>{user?.email || "unknown"}</Muted>
+            </DropdownMenuLabel>
             <DropdownMenuSeparator />
             <DropdownMenuItem onClick={logout}>
               <LogOut className="mr-2 h-4 w-4" />
