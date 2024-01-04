@@ -7,6 +7,7 @@ import { redirect } from "next/navigation";
 
 import { Database } from "@/lib/supabase";
 import { getHttpOrHttps } from "./utils";
+import { Board } from "./definitions";
 
 export type SigninState = {
   errors?: {
@@ -26,6 +27,7 @@ export async function signin(prevState: SigninState, formData: FormData) {
   const supabase = createServerActionClient<Database>({
     cookies: () => cookieStore,
   });
+
   const validatedFields = SigninFormSchema.safeParse({
     email: formData.get("email"),
     password: formData.get("password"),
@@ -140,4 +142,88 @@ export async function getUserInfo(user_id: string) {
   }
 
   return data;
+}
+
+export type BoardState = {
+  errors?: {
+    name?: string[];
+  };
+  message?: string | null;
+};
+
+const BoardFormSchema = z.object({
+  name: z.string().min(1),
+});
+
+export async function createBoard(prevState: BoardState, formData: FormData) {
+  const cookieStore = cookies();
+  const supabase = createServerActionClient<Database>({
+    cookies: () => cookieStore,
+  });
+
+  const validatedFields = BoardFormSchema.safeParse({
+    name: formData.get("name"),
+  });
+
+  // If validation fails, return early with errors
+  if (!validatedFields.success) {
+    return {
+      errors: validatedFields.error.flatten().fieldErrors,
+      message: "Please fill in all required fields.",
+    };
+  }
+
+  const { name } = validatedFields.data;
+
+  const {
+    data: { session },
+  } = await supabase.auth.getSession();
+
+  if (!session) {
+    return {
+      errors: {},
+      message: "User is not logged in.",
+    };
+  }
+
+  const { error } = await supabase.from("boards").insert({
+    user_id: session.user.id,
+    created_at: new Date().toISOString(),
+    name: name,
+  });
+
+  if (error) {
+    return {
+      errors: {},
+      message: error.message,
+    };
+  }
+
+  redirect("/dashboard");
+}
+
+export async function getBoards() {
+  const cookieStore = cookies();
+  const supabase = createServerActionClient<Database>({
+    cookies: () => cookieStore,
+  });
+
+  const {
+    data: { session },
+  } = await supabase.auth.getSession();
+
+  if (!session) {
+    return null;
+  }
+
+  const { data, error } = await supabase
+    .from("boards")
+    .select()
+    .eq("user_id", session.user.id);
+
+  if (error) {
+    return null;
+  }
+
+  return data as Board[];
 }

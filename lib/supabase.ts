@@ -12,19 +12,19 @@ export interface Database {
       boards: {
         Row: {
           created_at: string
-          id: number
+          id: string
           name: string
           user_id: string
         }
         Insert: {
           created_at?: string
-          id?: number
+          id?: string
           name: string
           user_id: string
         }
         Update: {
           created_at?: string
-          id?: number
+          id?: string
           name?: string
           user_id?: string
         }
@@ -40,38 +40,38 @@ export interface Database {
       }
       posts: {
         Row: {
-          board_id: number
           created_at: string
           description: string | null
-          id: number
+          id: string
           status: string
           title: string
           upvotes: number
+          user_id: string
         }
         Insert: {
-          board_id: number
           created_at?: string
           description?: string | null
-          id?: number
+          id?: string
           status: string
           title: string
           upvotes?: number
+          user_id: string
         }
         Update: {
-          board_id?: number
           created_at?: string
           description?: string | null
-          id?: number
+          id?: string
           status?: string
           title?: string
           upvotes?: number
+          user_id?: string
         }
         Relationships: [
           {
-            foreignKeyName: "posts_board_id_fkey"
-            columns: ["board_id"]
+            foreignKeyName: "posts_user_id_fkey"
+            columns: ["user_id"]
             isOneToOne: false
-            referencedRelation: "boards"
+            referencedRelation: "users"
             referencedColumns: ["id"]
           }
         ]

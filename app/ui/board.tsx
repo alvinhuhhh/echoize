@@ -4,17 +4,16 @@ import {
   CardFooter,
   CardHeader,
 } from "@/components/ui/card";
-import { H3, P } from "@/components/ui/typography";
+import { H3 } from "@/components/ui/typography";
+import { Board } from "@/lib/definitions";
 
-export default function Board() {
+export default function BoardComponent({ board }: { board: Board }) {
   return (
     <Card>
       <CardHeader>
-        <H3>This is a Board</H3>
+        <H3>{board.name}</H3>
       </CardHeader>
-      <CardContent>
-        <P>This is some description</P>
-      </CardContent>
+      <CardContent></CardContent>
       <CardFooter>This is some footer</CardFooter>
     </Card>
   );
