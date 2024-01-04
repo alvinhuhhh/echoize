@@ -9,9 +9,9 @@ export default function Home() {
         <Title>Echoize</Title>
         <P>Product feedback made simple.</P>
       </div>
-      <Link href="/login">
-        <Button>Let&#39;s go</Button>
-      </Link>
+      <Button asChild>
+        <Link href="/login">Let&#39;s go</Link>
+      </Button>
     </main>
   );
 }

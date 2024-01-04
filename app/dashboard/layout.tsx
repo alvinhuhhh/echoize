@@ -25,7 +25,7 @@ export default async function DashboardLayout({
   return (
     <main>
       <Navbar />
-      <div className="p-4">{children}</div>
+      <div className="flex justify-center items-center p-8">{children}</div>
     </main>
   );
 }

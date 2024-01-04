@@ -80,9 +80,9 @@ export default function SignupForm() {
           </div>
         </CardContent>
         <CardFooter className="flex justify-between">
-          <Link href="/login">
-            <Button variant="outline">Cancel</Button>
-          </Link>
+          <Button variant="outline" asChild>
+            <Link href="/login">Cancel</Link>
+          </Button>
           <Button>Sign up</Button>
         </CardFooter>
       </Card>

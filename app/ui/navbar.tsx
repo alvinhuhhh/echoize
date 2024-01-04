@@ -33,7 +33,7 @@ export default function Navbar() {
   }
 
   return (
-    <div className="grid grid-cols-12 gap-4 items-center p-2 border-b-2">
+    <div className="grid grid-cols-12 gap-4 items-center p-2 border-b-2 sticky top-0 backdrop-blur">
       <div className="col-span-1 flex justify-center items-center">
         <H3>Echoize</H3>
       </div>
