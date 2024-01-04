@@ -8,6 +8,54 @@ import { redirect } from "next/navigation";
 import { Database } from "@/lib/supabase";
 import { getHttpOrHttps } from "./utils";
 
+export type SigninState = {
+  errors?: {
+    email?: string[];
+    password?: string[];
+  };
+  message?: string | null;
+};
+
+const SigninFormSchema = z.object({
+  email: z.string().email(),
+  password: z.string().min(6),
+});
+
+export async function signin(prevState: SigninState, formData: FormData) {
+  const cookieStore = cookies();
+  const supabase = createServerActionClient<Database>({
+    cookies: () => cookieStore,
+  });
+  const validatedFields = SigninFormSchema.safeParse({
+    email: formData.get("email"),
+    password: formData.get("password"),
+  });
+
+  // If validation fails, return early with errors
+  if (!validatedFields.success) {
+    return {
+      errors: validatedFields.error.flatten().fieldErrors,
+      message: "Invalid credentials. Please fill in all required fields.",
+    };
+  }
+
+  const { email, password } = validatedFields.data;
+
+  const { error } = await supabase.auth.signInWithPassword({
+    email,
+    password,
+  });
+
+  if (error) {
+    return {
+      errors: {},
+      message: error.message,
+    };
+  }
+
+  redirect("/dashboard");
+}
+
 export type SignupState = {
   errors?: {
     email?: string[];
