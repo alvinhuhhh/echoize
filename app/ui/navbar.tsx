@@ -16,6 +16,7 @@ import {
   NavigationMenuList,
   navigationMenuTriggerStyle,
 } from "@/components/ui/navigation-menu";
+import { ThemeToggle } from "@/components/ui/theme-toggle";
 import { H3 } from "@/components/ui/typography";
 import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
 import { CircleUserRound, LogOut } from "lucide-react";
@@ -57,10 +58,11 @@ export default function Navbar() {
         </NavigationMenu>
       </div>
       <div className="col-span-1 flex justify-center items-center">
+        <ThemeToggle />
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
-            <Button variant="ghost">
-              <CircleUserRound size={28} />
+            <Button variant="ghost" size="icon">
+              <CircleUserRound />
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent>
