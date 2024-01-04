@@ -6,6 +6,7 @@ import { createServerActionClient } from "@supabase/auth-helpers-nextjs";
 import { redirect } from "next/navigation";
 
 import { Database } from "@/lib/supabase";
+import { getHttpOrHttps } from "./utils";
 
 export type SignupState = {
   errors?: {
@@ -48,7 +49,9 @@ export async function signup(prevState: SignupState, formData: FormData) {
     email,
     password,
     options: {
-      emailRedirectTo: `${headersList.get("host")}/auth/callback`,
+      emailRedirectTo: `${getHttpOrHttps()}${headersList.get(
+        "host"
+      )}/auth/callback`,
     },
   });
 
