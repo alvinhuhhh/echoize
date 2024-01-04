@@ -9,29 +9,29 @@ export type Json =
 export interface Database {
   public: {
     Tables: {
-      board: {
+      boards: {
         Row: {
-          createdAt: string
+          created_at: string
           id: number
           name: string
-          userId: number
+          user_id: string
         }
         Insert: {
-          createdAt?: string
+          created_at?: string
           id?: number
           name: string
-          userId: number
+          user_id: string
         }
         Update: {
-          createdAt?: string
+          created_at?: string
           id?: number
           name?: string
-          userId?: number
+          user_id?: string
         }
         Relationships: [
           {
-            foreignKeyName: "board_userId_fkey"
-            columns: ["userId"]
+            foreignKeyName: "boards_user_id_fkey"
+            columns: ["user_id"]
             isOneToOne: false
             referencedRelation: "users"
             referencedColumns: ["id"]
@@ -40,68 +40,70 @@ export interface Database {
       }
       posts: {
         Row: {
-          boardId: number
-          createdAt: string
+          board_id: number
+          created_at: string
           description: string | null
-          echoes: number
           id: number
           status: string
           title: string
+          upvotes: number
         }
         Insert: {
-          boardId: number
-          createdAt?: string
+          board_id: number
+          created_at?: string
           description?: string | null
-          echoes?: number
           id?: number
-          status?: string
+          status: string
           title: string
+          upvotes?: number
         }
         Update: {
-          boardId?: number
-          createdAt?: string
+          board_id?: number
+          created_at?: string
           description?: string | null
-          echoes?: number
           id?: number
           status?: string
           title?: string
+          upvotes?: number
         }
         Relationships: [
           {
-            foreignKeyName: "posts_boardId_fkey"
-            columns: ["boardId"]
+            foreignKeyName: "posts_board_id_fkey"
+            columns: ["board_id"]
             isOneToOne: false
-            referencedRelation: "board"
+            referencedRelation: "boards"
             referencedColumns: ["id"]
           }
         ]
       }
-      users: {
+      user_infos: {
         Row: {
-          createdAt: string
-          displayName: string | null
-          email: string | null
-          id: number
-          password: string
-          username: string
+          created_at: string
+          display_name: string | null
+          id: string
+          user_id: string
         }
         Insert: {
-          createdAt?: string
-          displayName?: string | null
-          email?: string | null
-          id?: number
-          password: string
-          username: string
+          created_at?: string
+          display_name?: string | null
+          id?: string
+          user_id: string
         }
         Update: {
-          createdAt?: string
-          displayName?: string | null
-          email?: string | null
-          id?: number
-          password?: string
-          username?: string
+          created_at?: string
+          display_name?: string | null
+          id?: string
+          user_id?: string
         }
-        Relationships: []
+        Relationships: [
+          {
+            foreignKeyName: "user_infos_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "users"
+            referencedColumns: ["id"]
+          }
+        ]
       }
     }
     Views: {
