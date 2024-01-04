@@ -229,7 +229,7 @@ export async function getBoards() {
   return data as Board[];
 }
 
-export async function getBoardById(id: string) {
+export async function getBoardById(board_id: string) {
   const cookieStore = cookies();
   const supabase = createServerActionClient<Database>({
     cookies: () => cookieStore,
@@ -246,7 +246,7 @@ export async function getBoardById(id: string) {
   const { data, error } = await supabase
     .from("boards")
     .select()
-    .eq("id", id)
+    .eq("id", board_id)
     .single();
 
   if (error) {
@@ -257,7 +257,7 @@ export async function getBoardById(id: string) {
 }
 
 export async function updateBoard(
-  id: string,
+  board_id: string,
   prevState: BoardState,
   formData: FormData
 ) {
@@ -294,7 +294,7 @@ export async function updateBoard(
   const { error } = await supabase
     .from("boards")
     .update({ name: name })
-    .eq("id", id);
+    .eq("id", board_id);
 
   if (error) {
     return {
@@ -306,7 +306,7 @@ export async function updateBoard(
   redirect("/dashboard");
 }
 
-export async function deleteBoard(id: string) {
+export async function deleteBoard(board_id: string) {
   const cookieStore = cookies();
   const supabase = createServerActionClient<Database>({
     cookies: () => cookieStore,
@@ -320,7 +320,7 @@ export async function deleteBoard(id: string) {
     return;
   }
 
-  const { data, error } = await supabase.from("boards").delete().eq("id", id);
+  const { error } = await supabase.from("boards").delete().eq("id", board_id);
 
   if (error) {
     return;
@@ -329,7 +329,7 @@ export async function deleteBoard(id: string) {
   revalidatePath("/dashboard");
 }
 
-export async function getPostCount(board: Board) {
+export async function getPostCount(board_id: string) {
   const cookieStore = cookies();
   const supabase = createServerActionClient<Database>({
     cookies: () => cookieStore,
@@ -343,10 +343,42 @@ export async function getPostCount(board: Board) {
     return null;
   }
 
-  const count = (await supabase.from("posts").select().eq("board_id", board.id))
-    .count;
+  const { count, error } = await supabase
+    .from("posts")
+    .select("*", { count: "exact", head: true })
+    .eq("board_id", board_id);
+
+  if (error) {
+    return null;
+  }
 
   return count;
+}
+
+export async function getPostCountByBoardId() {
+  const cookieStore = cookies();
+  const supabase = createServerActionClient<Database>({
+    cookies: () => cookieStore,
+  });
+
+  const {
+    data: { session },
+  } = await supabase.auth.getSession();
+
+  if (!session) {
+    return null;
+  }
+
+  const { data, error } = await supabase
+    .from("get_post_count_per_board")
+    .select()
+    .eq("user_id", session.user.id);
+
+  if (error) {
+    return null;
+  }
+
+  return data;
 }
 
 export async function getPosts() {}
