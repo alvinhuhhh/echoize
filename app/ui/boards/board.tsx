@@ -12,23 +12,29 @@ import {
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
 import { Button } from "@/components/ui/button";
-import { Card, CardFooter, CardHeader } from "@/components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardFooter,
+  CardHeader,
+} from "@/components/ui/card";
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 import {
-  Tooltip,
-  TooltipContent,
-  TooltipProvider,
-  TooltipTrigger,
-} from "@/components/ui/tooltip";
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
 import { H3, Muted, Small } from "@/components/ui/typography";
 import { deleteBoard } from "@/lib/actions";
 import { Board } from "@/lib/definitions";
-import { Check, FileCog, Link, MoreHorizontal, Trash } from "lucide-react";
+import { Clipboard, FileCog, MoreHorizontal, Trash } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 
@@ -39,19 +45,18 @@ export default function BoardComponent({
   board: Board;
   postCount: number;
 }) {
-  const [linkCopied, setLinkCopied] = useState(false);
+  const [open, setOpen] = useState(false);
   const router = useRouter();
+  const boardUrl = `${window.location.origin}/public/${board.id}`;
 
   function copyLink() {
-    navigator.clipboard.writeText(
-      `${window.location.origin}/public/${board.id}`
-    );
-    setLinkCopied(true);
+    navigator.clipboard.writeText(boardUrl);
+    setOpen(true);
 
     const timer = setTimeout(() => {
-      setLinkCopied(false);
+      setOpen(false);
       clearTimeout(timer);
-    }, 5000);
+    }, 3000);
   }
 
   function editBoard() {
@@ -63,29 +68,9 @@ export default function BoardComponent({
   return (
     <Card>
       <CardHeader>
-        <H3>{board.name}</H3>
-      </CardHeader>
-      <CardFooter>
         <div className="flex justify-between items-center w-full">
-          <Muted>{postCount ?? 0} Posts</Muted>
+          <H3>{board.name}</H3>
           <div className="flex gap-2">
-            <TooltipProvider delayDuration={100}>
-              <Tooltip>
-                <TooltipTrigger asChild>
-                  <Button variant="outline" size="icon" onClick={copyLink}>
-                    {linkCopied ? <Check /> : <Link />}
-                  </Button>
-                </TooltipTrigger>
-                <TooltipContent>
-                  {linkCopied ? (
-                    <Small>Link copied!</Small>
-                  ) : (
-                    <Small>Copy link</Small>
-                  )}
-                </TooltipContent>
-              </Tooltip>
-            </TooltipProvider>
-
             <AlertDialog>
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
@@ -127,6 +112,33 @@ export default function BoardComponent({
               </AlertDialogContent>
             </AlertDialog>
           </div>
+        </div>
+      </CardHeader>
+      <CardContent>
+        <div className="flex flex-col space-y-1.5">
+          <Label htmlFor="url">Board URL</Label>
+          <div className="flex w-full items-center space-x-2">
+            <Input id="url" name="url" defaultValue={boardUrl} disabled />
+            <Popover open={open}>
+              <PopoverTrigger asChild>
+                <Button onClick={copyLink}>
+                  <Clipboard className="mr-2 h-4 w-4" />
+                  Copy Link
+                </Button>
+              </PopoverTrigger>
+              <PopoverContent className="w-fit">
+                <Small>Link copied!</Small>
+              </PopoverContent>
+            </Popover>
+          </div>
+        </div>
+      </CardContent>
+      <CardFooter>
+        <div className="flex justify-start items-center w-full gap-4">
+          <Muted>{postCount ?? 0} Posts</Muted>
+          <Small className="text-red-600">0 Pending</Small>
+          <Small className="text-orange-600">0 Development</Small>
+          <Small className="text-green-600">0 Live</Small>
         </div>
       </CardFooter>
     </Card>
