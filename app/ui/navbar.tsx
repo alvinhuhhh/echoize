@@ -37,11 +37,11 @@ export default function Navbar({ user }: { user?: User & UserInfo }) {
   }
 
   return (
-    <div className="grid grid-cols-12 gap-4 items-center p-2 border-b-2 sticky top-0 backdrop-blur">
-      <div className="col-span-1 flex justify-center items-center">
+    <div className="grid grid-cols-8 lg:grid-cols-12 gap-4 items-center p-2 border-b-2 sticky top-0 backdrop-blur">
+      <div className="col-span-2 lg:col-span-1 flex justify-center items-center">
         <H3>Echoize</H3>
       </div>
-      <div className="col-span-10 flex justify-start items-center">
+      <div className="col-span-4 lg:col-span-10 flex justify-start items-center">
         <NavigationMenu>
           <NavigationMenuList>
             <NavigationMenuItem>
@@ -61,7 +61,7 @@ export default function Navbar({ user }: { user?: User & UserInfo }) {
           </NavigationMenuList>
         </NavigationMenu>
       </div>
-      <div className="col-span-1 flex justify-center items-center">
+      <div className="col-span-2 lg:col-span-1 flex justify-center items-center">
         <ThemeToggle />
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
