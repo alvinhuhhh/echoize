@@ -31,8 +31,12 @@ export default async function DashboardPage() {
       </div>
       <div className="flex flex-col mt-6 space-y-4">
         {boards?.length ? (
-          boards.map((board: Board, index: number) => (
-            <BoardComponent key={index} board={board} postCount={postCount} />
+          boards.map((board: Board) => (
+            <BoardComponent
+              key={board.id}
+              board={board}
+              postCount={postCount}
+            />
           ))
         ) : (
           <Muted>No boards found. Create one?</Muted>

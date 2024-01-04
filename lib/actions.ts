@@ -8,6 +8,7 @@ import { redirect } from "next/navigation";
 import { Database } from "@/lib/supabase";
 import { getHttpOrHttps } from "./utils";
 import { Board } from "./definitions";
+import { revalidatePath } from "next/cache";
 
 export type SigninState = {
   errors?: {
@@ -316,16 +317,16 @@ export async function deleteBoard(id: string) {
   } = await supabase.auth.getSession();
 
   if (!session) {
-    return false;
+    return;
   }
 
   const { data, error } = await supabase.from("boards").delete().eq("id", id);
 
   if (error) {
-    return false;
+    return;
   }
 
-  return true;
+  revalidatePath("/dashboard");
 }
 
 export async function getPostCount(board: Board) {
