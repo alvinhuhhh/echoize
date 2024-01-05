@@ -7,7 +7,7 @@ import { redirect } from "next/navigation";
 
 import { Database } from "@/lib/supabase";
 import { getHttpOrHttps } from "@/lib/utils";
-import { Board, Post } from "@/lib/definitions";
+import { Board, Post, Status } from "@/lib/definitions";
 import { revalidatePath } from "next/cache";
 
 export type SigninState = {
@@ -329,6 +329,72 @@ export async function deleteBoard(board_id: string) {
   revalidatePath("/dashboard");
 }
 
+export type PostState = {
+  errors?: {
+    title?: string[];
+    description?: string[];
+  };
+  message?: string | null;
+};
+
+const PostFormSchema = z.object({
+  title: z.string(),
+  description: z.string(),
+});
+
+export async function createPost(
+  board_id: string,
+  prevState: PostState,
+  formData: FormData
+) {
+  const cookieStore = cookies();
+  const supabase = createServerActionClient<Database>({
+    cookies: () => cookieStore,
+  });
+
+  const validatedFields = PostFormSchema.safeParse({
+    title: formData.get("title"),
+    description: formData.get("description"),
+  });
+
+  // If validation fails, return early with errors
+  if (!validatedFields.success) {
+    return {
+      errors: validatedFields.error.flatten().fieldErrors,
+      message: "Please fill in all required fields.",
+    };
+  }
+
+  const { title, description } = validatedFields.data;
+
+  const {
+    data: { session },
+  } = await supabase.auth.getSession();
+
+  if (!session) {
+    return {
+      errors: {},
+      message: "User is not logged in.",
+    };
+  }
+
+  const { error } = await supabase.from("posts").insert({
+    board_id: board_id,
+    title: title,
+    description: description,
+    status: Status.PENDING,
+  });
+
+  if (error) {
+    return {
+      errors: {},
+      message: error.message,
+    };
+  }
+
+  redirect("/dashboard");
+}
+
 export async function getPostCount(board_id: string) {
   const cookieStore = cookies();
   const supabase = createServerActionClient<Database>({
@@ -407,9 +473,56 @@ export async function getPostsForBoardId(board_id: string) {
   return data as Post[];
 }
 
-export async function createPost() {}
+export async function updatePost(
+  post_id: string,
+  prevState: PostState,
+  formData: FormData
+) {
+  const cookieStore = cookies();
+  const supabase = createServerActionClient<Database>({
+    cookies: () => cookieStore,
+  });
 
-export async function updatePost() {}
+  const validatedFields = PostFormSchema.safeParse({
+    title: formData.get("title"),
+    description: formData.get("description"),
+  });
+
+  // If validation fails, return early with errors
+  if (!validatedFields.success) {
+    return {
+      errors: validatedFields.error.flatten().fieldErrors,
+      message: "Please fill in all required fields.",
+    };
+  }
+
+  const { title, description } = validatedFields.data;
+
+  const {
+    data: { session },
+  } = await supabase.auth.getSession();
+
+  if (!session) {
+    return {
+      errors: {},
+      message: "User is not logged in.",
+    };
+  }
+
+  const { error } = await supabase
+    .from("posts")
+    .update({ title: title, description: description })
+    .eq("post_id", post_id);
+
+  if (error) {
+    return {
+      errors: {},
+      message: error.message,
+    };
+  }
+
+  redirect("/dashboard");
+}
 
 export async function deletePost(id: string) {
   const cookieStore = cookies();
@@ -425,7 +538,7 @@ export async function deletePost(id: string) {
     return false;
   }
 
-  const { data, error } = await supabase.from("posts").delete().eq("id", id);
+  const { error } = await supabase.from("posts").delete().eq("id", id);
 
   if (error) {
     return false;

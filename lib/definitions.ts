@@ -14,6 +14,8 @@ export type Board = {
 
 export enum Status {
   PENDING = "pending",
+  REJECTED = "rejected",
+  HOLD = "on hold",
   DEV = "development",
   LIVE = "live",
 }
