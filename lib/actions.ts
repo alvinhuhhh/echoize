@@ -220,7 +220,8 @@ export async function getBoards() {
   const { data, error } = await supabase
     .from("boards")
     .select()
-    .eq("user_id", session.user.id);
+    .eq("user_id", session.user.id)
+    .order("created_at");
 
   if (error) {
     return null;
@@ -464,7 +465,8 @@ export async function getPostsForBoardId(board_id: string) {
   const { data, error } = await supabase
     .from("posts")
     .select()
-    .eq("board_id", board_id);
+    .eq("board_id", board_id)
+    .order("upvotes");
 
   if (error) {
     return null;

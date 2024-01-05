@@ -54,6 +54,8 @@ export default function BoardComponent({
   const [open, setOpen] = useState(false);
   const router = useRouter();
   const boardUrl = `${window.location.origin}/public/${board.id}`;
+  const createdDate = new Date(board.created_at);
+  const createdDateString = `${createdDate.toLocaleString()}`;
 
   function copyLink() {
     navigator.clipboard.writeText(boardUrl);
@@ -148,11 +150,13 @@ export default function BoardComponent({
         </div>
       </CardContent>
       <CardFooter>
-        <div className="flex justify-start items-center w-full gap-4">
+        <div className="flex justify-between items-center w-full gap-4">
           <Muted>{postCount ?? 0} Posts</Muted>
           {/* <Small className="text-red-600">0 Pending</Small>
             <Small className="text-orange-600">0 Development</Small>
             <Small className="text-green-600">0 Live</Small> */}
+
+          {/* <Muted>{createdDateString}</Muted> */}
         </div>
       </CardFooter>
     </Card>
