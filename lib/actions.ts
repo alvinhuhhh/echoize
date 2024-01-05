@@ -355,7 +355,7 @@ export async function getPostCount(board_id: string) {
   return count;
 }
 
-export async function getPostCountByBoardId() {
+export async function getPostCountPerBoard() {
   const cookieStore = cookies();
   const supabase = createServerActionClient<Database>({
     cookies: () => cookieStore,
