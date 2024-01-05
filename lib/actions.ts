@@ -6,8 +6,8 @@ import { createServerActionClient } from "@supabase/auth-helpers-nextjs";
 import { redirect } from "next/navigation";
 
 import { Database } from "@/lib/supabase";
-import { getHttpOrHttps } from "./utils";
-import { Board } from "./definitions";
+import { getHttpOrHttps } from "@/lib/utils";
+import { Board, Post } from "@/lib/definitions";
 import { revalidatePath } from "next/cache";
 
 export type SigninState = {
@@ -381,7 +381,31 @@ export async function getPostCountPerBoard() {
   return data;
 }
 
-export async function getPosts() {}
+export async function getPostsForBoardId(board_id: string) {
+  const cookieStore = cookies();
+  const supabase = createServerActionClient<Database>({
+    cookies: () => cookieStore,
+  });
+
+  const {
+    data: { session },
+  } = await supabase.auth.getSession();
+
+  if (!session) {
+    return null;
+  }
+
+  const { data, error } = await supabase
+    .from("posts")
+    .select()
+    .eq("board_id", board_id);
+
+  if (error) {
+    return null;
+  }
+
+  return data as Post[];
+}
 
 export async function createPost() {}
 
