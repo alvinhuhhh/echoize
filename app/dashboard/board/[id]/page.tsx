@@ -1,6 +1,8 @@
-import { getPostsForBoardId } from "@/lib/actions";
-import { Post } from "@/lib/definitions";
+import PostComponent from "@/app/ui/posts/post";
+import { H2, Muted } from "@/components/ui/typography";
+import { getBoardById, getPostsForBoardId } from "@/lib/actions";
 import { Metadata } from "next";
+import { notFound } from "next/navigation";
 
 export const metadata: Metadata = {
   title: "Board",
@@ -12,14 +14,29 @@ export default async function BoardPage({
   params: { id: string };
 }) {
   const board_id = params.id;
-  const posts: Post[] | null = await getPostsForBoardId(board_id);
+  const board = await getBoardById(board_id);
 
-  console.log(posts);
+  if (!board) {
+    notFound();
+  }
+
+  const posts = await getPostsForBoardId(board_id);
 
   return (
-    <main>
-      <h1>This is a board page</h1>
-      {posts?.length && posts.map((post) => <h1>{post.title}</h1>)}
+    <main className="max-w-[960px] w-screen">
+      <div className="flex justify-between">
+        <div className="flex flex-col">
+          <H2>{board.name}</H2>
+          <Muted className="mt-1">{posts?.length} Posts</Muted>
+        </div>
+      </div>
+      <div className="flex flex-col mt-6 space-y-4">
+        {posts?.length ? (
+          posts.map((post) => <PostComponent post={post} />)
+        ) : (
+          <Muted>No posts found.</Muted>
+        )}
+      </div>
     </main>
   );
 }
