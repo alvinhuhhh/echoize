@@ -13,9 +13,11 @@ export type Board = {
 };
 
 export enum Status {
-  PENDING = "pending",
-  DEV = "development",
-  LIVE = "live",
+  PENDING = "Pending",
+  REJECTED = "Rejected",
+  HOLD = "On Hold",
+  DEV = "Under Development",
+  LIVE = "Live",
 }
 
 export type Post = {

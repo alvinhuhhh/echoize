@@ -6,13 +6,14 @@ export interface TypographyProps
   extends React.HTMLAttributes<HTMLHeadingElement> {}
 
 const H1 = React.forwardRef<HTMLHeadingElement, TypographyProps>(
-  ({ className, ...props }, ref) => {
+  ({ className, suppressHydrationWarning, ...props }, ref) => {
     return (
       <h1
         ref={ref}
         className={cn(
           `${className} scroll-m-20 text-4xl font-extrabold tracking-tight lg:text-5xl`
         )}
+        suppressHydrationWarning={suppressHydrationWarning}
       >
         {props.children}
       </h1>
@@ -22,13 +23,14 @@ const H1 = React.forwardRef<HTMLHeadingElement, TypographyProps>(
 H1.displayName = "H1";
 
 const H2 = React.forwardRef<HTMLHeadingElement, TypographyProps>(
-  ({ className, ...props }, ref) => {
+  ({ className, suppressHydrationWarning, ...props }, ref) => {
     return (
       <h2
         ref={ref}
         className={cn(
           `${className} scroll-m-20 text-3xl font-semibold tracking-tight first:mt-0`
         )}
+        suppressHydrationWarning={suppressHydrationWarning}
       >
         {props.children}
       </h2>
@@ -38,13 +40,14 @@ const H2 = React.forwardRef<HTMLHeadingElement, TypographyProps>(
 H2.displayName = "H2";
 
 const H3 = React.forwardRef<HTMLHeadingElement, TypographyProps>(
-  ({ className, ...props }, ref) => {
+  ({ className, suppressHydrationWarning, ...props }, ref) => {
     return (
       <h3
         ref={ref}
         className={cn(
           `${className} scroll-m-20 text-2xl font-semibold tracking-tight`
         )}
+        suppressHydrationWarning={suppressHydrationWarning}
       >
         {props.children}
       </h3>
@@ -54,13 +57,14 @@ const H3 = React.forwardRef<HTMLHeadingElement, TypographyProps>(
 H3.displayName = "H3";
 
 const H4 = React.forwardRef<HTMLHeadingElement, TypographyProps>(
-  ({ className, ...props }, ref) => {
+  ({ className, suppressHydrationWarning, ...props }, ref) => {
     return (
       <h4
         ref={ref}
         className={cn(
           `${className} scroll-m-20 text-xl font-semibold tracking-tight`
         )}
+        suppressHydrationWarning={suppressHydrationWarning}
       >
         {props.children}
       </h4>
@@ -70,13 +74,14 @@ const H4 = React.forwardRef<HTMLHeadingElement, TypographyProps>(
 H4.displayName = "H4";
 
 const Title = React.forwardRef<HTMLHeadingElement, TypographyProps>(
-  ({ className, ...props }, ref) => {
+  ({ className, suppressHydrationWarning, ...props }, ref) => {
     return (
       <h4
         ref={ref}
         className={cn(
           `${className} scroll-m-20 text-8xl font-extrabold tracking-tight lg:text-9xl`
         )}
+        suppressHydrationWarning={suppressHydrationWarning}
       >
         {props.children}
       </h4>
@@ -86,11 +91,12 @@ const Title = React.forwardRef<HTMLHeadingElement, TypographyProps>(
 Title.displayName = "Title";
 
 const P = React.forwardRef<HTMLParagraphElement, TypographyProps>(
-  ({ className, ...props }, ref) => {
+  ({ className, suppressHydrationWarning, ...props }, ref) => {
     return (
       <p
         ref={ref}
         className={cn(`${className} leading-7 [&:not(:first-child)]:mt-6`)}
+        suppressHydrationWarning={suppressHydrationWarning}
       >
         {props.children}
       </p>
@@ -100,9 +106,13 @@ const P = React.forwardRef<HTMLParagraphElement, TypographyProps>(
 P.displayName = "P";
 
 const Large = React.forwardRef<HTMLParagraphElement, TypographyProps>(
-  ({ className, ...props }, ref) => {
+  ({ className, suppressHydrationWarning, ...props }, ref) => {
     return (
-      <p ref={ref} className={cn(`${className} text-lg font-semibold`)}>
+      <p
+        ref={ref}
+        className={cn(`${className} text-lg font-semibold`)}
+        suppressHydrationWarning={suppressHydrationWarning}
+      >
         {props.children}
       </p>
     );
@@ -111,11 +121,12 @@ const Large = React.forwardRef<HTMLParagraphElement, TypographyProps>(
 Large.displayName = "Large";
 
 const Small = React.forwardRef<HTMLParagraphElement, TypographyProps>(
-  ({ className, ...props }, ref) => {
+  ({ className, suppressHydrationWarning, ...props }, ref) => {
     return (
       <p
         ref={ref}
         className={cn(`${className} text-sm font-medium leading-none`)}
+        suppressHydrationWarning={suppressHydrationWarning}
       >
         {props.children}
       </p>
@@ -125,9 +136,13 @@ const Small = React.forwardRef<HTMLParagraphElement, TypographyProps>(
 Small.displayName = "Small";
 
 const Muted = React.forwardRef<HTMLParagraphElement, TypographyProps>(
-  ({ className, ...props }, ref) => {
+  ({ className, suppressHydrationWarning, ...props }, ref) => {
     return (
-      <p ref={ref} className={cn(`${className} text-sm text-muted-foreground`)}>
+      <p
+        ref={ref}
+        className={cn(`${className} text-sm text-muted-foreground`)}
+        suppressHydrationWarning={suppressHydrationWarning}
+      >
         {props.children}
       </p>
     );
@@ -136,9 +151,13 @@ const Muted = React.forwardRef<HTMLParagraphElement, TypographyProps>(
 Muted.displayName = "Muted";
 
 const ValidationError = React.forwardRef<HTMLParagraphElement, TypographyProps>(
-  ({ className, ...props }, ref) => {
+  ({ className, suppressHydrationWarning, ...props }, ref) => {
     return (
-      <p ref={ref} className={cn(`${className} text-sm text-red-500`)}>
+      <p
+        ref={ref}
+        className={cn(`${className} text-sm text-red-500`)}
+        suppressHydrationWarning={suppressHydrationWarning}
+      >
         {props.children}
       </p>
     );

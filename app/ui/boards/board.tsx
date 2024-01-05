@@ -34,7 +34,13 @@ import {
 import { H3, Muted, Small } from "@/components/ui/typography";
 import { deleteBoard } from "@/lib/actions";
 import { Board } from "@/lib/definitions";
-import { Clipboard, FileCog, MoreHorizontal, Trash } from "lucide-react";
+import {
+  Clipboard,
+  ExternalLink,
+  FileCog,
+  MoreHorizontal,
+  Trash,
+} from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 
@@ -47,16 +53,30 @@ export default function BoardComponent({
 }) {
   const [open, setOpen] = useState(false);
   const router = useRouter();
-  const boardUrl = `${window.location.origin}/public/${board.id}`;
+  const createdDate = new Date(board.created_at);
+  const createdDateString = `${createdDate.toLocaleString()}`;
+
+  let boardUrl = "";
+  if (typeof window !== "undefined") {
+    boardUrl = `${window.location.origin}/public/${board.id}`;
+  }
 
   function copyLink() {
-    navigator.clipboard.writeText(boardUrl);
-    setOpen(true);
+    if (typeof window !== "undefined") {
+      const boardUrl = `${window.location.origin}/public/${board.id}`;
 
-    const timer = setTimeout(() => {
-      setOpen(false);
-      clearTimeout(timer);
-    }, 3000);
+      navigator.clipboard.writeText(boardUrl);
+      setOpen(true);
+
+      const timer = setTimeout(() => {
+        setOpen(false);
+        clearTimeout(timer);
+      }, 3000);
+    }
+  }
+
+  function viewBoard() {
+    window.open(`${window.location.origin}/dashboard/board/${board.id}`);
   }
 
   function editBoard() {
@@ -79,6 +99,10 @@ export default function BoardComponent({
                   </Button>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent>
+                  <DropdownMenuItem onClick={viewBoard}>
+                    <ExternalLink className="mr-2 h-4 w-4" />
+                    <span>View</span>
+                  </DropdownMenuItem>
                   <DropdownMenuItem onClick={editBoard}>
                     <FileCog className="mr-2 h-4 w-4" />
                     <span>Edit</span>
@@ -134,11 +158,13 @@ export default function BoardComponent({
         </div>
       </CardContent>
       <CardFooter>
-        <div className="flex justify-start items-center w-full gap-4">
+        <div className="flex justify-between items-center w-full gap-4">
           <Muted>{postCount ?? 0} Posts</Muted>
-          <Small className="text-red-600">0 Pending</Small>
-          <Small className="text-orange-600">0 Development</Small>
-          <Small className="text-green-600">0 Live</Small>
+          {/* <Small className="text-red-600">0 Pending</Small>
+            <Small className="text-orange-600">0 Development</Small>
+            <Small className="text-green-600">0 Live</Small> */}
+
+          {/* <Muted>{createdDateString}</Muted> */}
         </div>
       </CardFooter>
     </Card>

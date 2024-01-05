@@ -6,8 +6,8 @@ import { createServerActionClient } from "@supabase/auth-helpers-nextjs";
 import { redirect } from "next/navigation";
 
 import { Database } from "@/lib/supabase";
-import { getHttpOrHttps } from "./utils";
-import { Board } from "./definitions";
+import { getHttpOrHttps } from "@/lib/utils";
+import { Board, Post, Status } from "@/lib/definitions";
 import { revalidatePath } from "next/cache";
 
 export type SigninState = {
@@ -220,7 +220,8 @@ export async function getBoards() {
   const { data, error } = await supabase
     .from("boards")
     .select()
-    .eq("user_id", session.user.id);
+    .eq("user_id", session.user.id)
+    .order("created_at");
 
   if (error) {
     return null;
@@ -329,6 +330,72 @@ export async function deleteBoard(board_id: string) {
   revalidatePath("/dashboard");
 }
 
+export type PostState = {
+  errors?: {
+    title?: string[];
+    description?: string[];
+  };
+  message?: string | null;
+};
+
+const PostFormSchema = z.object({
+  title: z.string(),
+  description: z.string(),
+});
+
+export async function createPost(
+  board_id: string,
+  prevState: PostState,
+  formData: FormData
+) {
+  const cookieStore = cookies();
+  const supabase = createServerActionClient<Database>({
+    cookies: () => cookieStore,
+  });
+
+  const validatedFields = PostFormSchema.safeParse({
+    title: formData.get("title"),
+    description: formData.get("description"),
+  });
+
+  // If validation fails, return early with errors
+  if (!validatedFields.success) {
+    return {
+      errors: validatedFields.error.flatten().fieldErrors,
+      message: "Please fill in all required fields.",
+    };
+  }
+
+  const { title, description } = validatedFields.data;
+
+  const {
+    data: { session },
+  } = await supabase.auth.getSession();
+
+  if (!session) {
+    return {
+      errors: {},
+      message: "User is not logged in.",
+    };
+  }
+
+  const { error } = await supabase.from("posts").insert({
+    board_id: board_id,
+    title: title,
+    description: description,
+    status: Status.PENDING,
+  });
+
+  if (error) {
+    return {
+      errors: {},
+      message: error.message,
+    };
+  }
+
+  redirect("/dashboard");
+}
+
 export async function getPostCount(board_id: string) {
   const cookieStore = cookies();
   const supabase = createServerActionClient<Database>({
@@ -355,7 +422,7 @@ export async function getPostCount(board_id: string) {
   return count;
 }
 
-export async function getPostCountByBoardId() {
+export async function getPostCountPerBoard() {
   const cookieStore = cookies();
   const supabase = createServerActionClient<Database>({
     cookies: () => cookieStore,
@@ -381,11 +448,83 @@ export async function getPostCountByBoardId() {
   return data;
 }
 
-export async function getPosts() {}
+export async function getPostsForBoardId(board_id: string) {
+  const cookieStore = cookies();
+  const supabase = createServerActionClient<Database>({
+    cookies: () => cookieStore,
+  });
 
-export async function createPost() {}
+  const {
+    data: { session },
+  } = await supabase.auth.getSession();
 
-export async function updatePost() {}
+  if (!session) {
+    return null;
+  }
+
+  const { data, error } = await supabase
+    .from("posts")
+    .select()
+    .eq("board_id", board_id)
+    .order("upvotes");
+
+  if (error) {
+    return null;
+  }
+
+  return data as Post[];
+}
+
+export async function updatePost(
+  post_id: string,
+  prevState: PostState,
+  formData: FormData
+) {
+  const cookieStore = cookies();
+  const supabase = createServerActionClient<Database>({
+    cookies: () => cookieStore,
+  });
+
+  const validatedFields = PostFormSchema.safeParse({
+    title: formData.get("title"),
+    description: formData.get("description"),
+  });
+
+  // If validation fails, return early with errors
+  if (!validatedFields.success) {
+    return {
+      errors: validatedFields.error.flatten().fieldErrors,
+      message: "Please fill in all required fields.",
+    };
+  }
+
+  const { title, description } = validatedFields.data;
+
+  const {
+    data: { session },
+  } = await supabase.auth.getSession();
+
+  if (!session) {
+    return {
+      errors: {},
+      message: "User is not logged in.",
+    };
+  }
+
+  const { error } = await supabase
+    .from("posts")
+    .update({ title: title, description: description })
+    .eq("post_id", post_id);
+
+  if (error) {
+    return {
+      errors: {},
+      message: error.message,
+    };
+  }
+
+  redirect("/dashboard");
+}
 
 export async function deletePost(id: string) {
   const cookieStore = cookies();
@@ -401,7 +540,7 @@ export async function deletePost(id: string) {
     return false;
   }
 
-  const { data, error } = await supabase.from("posts").delete().eq("id", id);
+  const { error } = await supabase.from("posts").delete().eq("id", id);
 
   if (error) {
     return false;

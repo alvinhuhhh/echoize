@@ -4,7 +4,7 @@ import BoardComponent from "@/app/ui/boards/board";
 import { Plus } from "lucide-react";
 import { Metadata } from "next";
 import Link from "next/link";
-import { getBoards, getPostCountByBoardId } from "@/lib/actions";
+import { getBoards, getPostCountPerBoard } from "@/lib/actions";
 import { Board } from "@/lib/definitions";
 
 export const metadata: Metadata = {
@@ -13,7 +13,7 @@ export const metadata: Metadata = {
 
 export default async function DashboardPage() {
   const boards = await getBoards();
-  const postsPerBoard = await getPostCountByBoardId();
+  const postsPerBoard = await getPostCountPerBoard();
 
   return (
     <main className="max-w-[960px] w-screen">

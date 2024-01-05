@@ -48,7 +48,7 @@ export default function EditBoardForm({ board }: { board: Board }) {
             <Button variant="outline" asChild>
               <Link href="/dashboard">Cancel</Link>
             </Button>
-            <Button>Create</Button>
+            <Button>Save</Button>
           </div>
         </CardFooter>
       </Card>
