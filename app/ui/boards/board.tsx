@@ -53,18 +53,26 @@ export default function BoardComponent({
 }) {
   const [open, setOpen] = useState(false);
   const router = useRouter();
-  const boardUrl = `${window.location.origin}/public/${board.id}`;
   const createdDate = new Date(board.created_at);
   const createdDateString = `${createdDate.toLocaleString()}`;
 
-  function copyLink() {
-    navigator.clipboard.writeText(boardUrl);
-    setOpen(true);
+  let boardUrl = "";
+  if (typeof window !== "undefined") {
+    boardUrl = `${window.location.origin}/public/${board.id}`;
+  }
 
-    const timer = setTimeout(() => {
-      setOpen(false);
-      clearTimeout(timer);
-    }, 3000);
+  function copyLink() {
+    if (typeof window !== "undefined") {
+      const boardUrl = `${window.location.origin}/public/${board.id}`;
+
+      navigator.clipboard.writeText(boardUrl);
+      setOpen(true);
+
+      const timer = setTimeout(() => {
+        setOpen(false);
+        clearTimeout(timer);
+      }, 3000);
+    }
   }
 
   function viewBoard() {

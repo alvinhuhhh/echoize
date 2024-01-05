@@ -32,7 +32,7 @@ export default async function BoardPage({
       </div>
       <div className="flex flex-col mt-6 space-y-4">
         {posts?.length ? (
-          posts.map((post) => <PostComponent post={post} />)
+          posts.map((post) => <PostComponent key={post.id} post={post} />)
         ) : (
           <Muted>No posts found.</Muted>
         )}
